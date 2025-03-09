@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/hello.go",
+      "src": "/converter",
       "use": "@vercel/go"
     }
   ]
