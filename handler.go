@@ -1,8 +1,7 @@
-package main
+package handler
 
 import (
     "encoding/json"
-    "fmt"
     "net/http"
     "strconv"
     "strings"
@@ -48,17 +47,11 @@ func converterHandler(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(resposta)
 }
 
-// Função exportada para a Vercel (sem mudanças no pacote)
+// Função exportada para a Vercel
 func Handler(w http.ResponseWriter, r *http.Request) {
     if r.URL.Path == "/converter" {
         converterHandler(w, r)
     } else {
         http.NotFound(w, r)
     }
-}
-
-func main() {
-    http.HandleFunc("/", Handler) // A Vercel espera o manipulador no pacote principal
-    fmt.Println("Servidor rodando em http://localhost:8080")
-    http.ListenAndServe(":8080", nil)
 }
