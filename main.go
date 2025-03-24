@@ -48,8 +48,17 @@ func converterHandler(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(resposta)
 }
 
+// Função principal para a Vercel
+func Handler(w http.ResponseWriter, r *http.Request) {
+    if r.URL.Path == "/converter" {
+        converterHandler(w, r)
+    } else {
+        http.NotFound(w, r)
+    }
+}
+
 func main() {
-    http.HandleFunc("/converter", converterHandler)
+    http.HandleFunc("/", Handler)
     fmt.Println("Servidor rodando em http://localhost:8080")
     http.ListenAndServe(":8080", nil)
 }
