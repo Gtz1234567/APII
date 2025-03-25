@@ -1,13 +1,13 @@
-package handler
+package main
 
 import (
     "encoding/json"
+    "fmt"
     "net/http"
     "strconv"
     "strings"
 )
 
-// Converte um número inteiro para número romano
 func intParaRomano(num int) string {
     valores := []int{1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1}
     simbolos := []string{"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"}
@@ -22,14 +22,7 @@ func intParaRomano(num int) string {
     return resultado.String()
 }
 
-// Estrutura da resposta JSON
-type Resposta struct {
-    Numero int    `json:"numero"`
-    Romano string `json:"romano"`
-}
-
-// Manipulador da API
-func converterHandler(w http.ResponseWriter, r *http.Request) {
+func ConverterHandler(w http.ResponseWriter, r *http.Request) {
     numeroStr := r.URL.Query().Get("numero")
     if numeroStr == "" {
         http.Error(w, "O parâmetro 'numero' é obrigatório", http.StatusBadRequest)
@@ -42,16 +35,28 @@ func converterHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    resposta := Resposta{Numero: numero, Romano: intParaRomano(numero)}
+    resposta := struct {
+        Numero int    `json:"numero"`
+        Romano string `json:"romano"`
+    }{
+        Numero: numero,
+        Romano: intParaRomano(numero),
+    }
+
     w.Header().Set("Content-Type", "application/json")
     json.NewEncoder(w).Encode(resposta)
 }
 
-// Função exportada para a Vercel
-func Handler(w http.ResponseWriter, r *http.Request) {
+func handler(w http.ResponseWriter, r *http.Request) {
     if r.URL.Path == "/converter" {
-        converterHandler(w, r)
+        ConverterHandler(w, r)
     } else {
-        http.NotFound(w, r)
+        http.Error(w, "Rota não encontrada", http.StatusNotFound)
     }
+}
+
+func main() {
+    http.HandleFunc("/", handler)
+    fmt.Println("API rodando em http://localhost:8080")
+    http.ListenAndServe(":8080", nil)
 }

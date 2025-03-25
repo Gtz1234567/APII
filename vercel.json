@@ -2,14 +2,8 @@
   "version": 2,
   "builds": [
     {
-      "src": "handler.go",
+      "src": "api/concerter.go",
       "use": "@vercel/go"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/converter",
-      "dest": "/handler.go"
     }
   ]
 }
