@@ -1,9 +1,14 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "api/concerter.go",
-      "use": "@vercel/go"
+  "functions": {
+    "ToConv.js": {
+      "runtime": "edge"
+    },
+    "FromConv.js": {
+      "runtime": "edge"
     }
+  },
+  "routes": [
+    { "src": "/ToConv", "dest": "/ToConv.js" },
+    { "src": "/FromConv", "dest": "/FromConv.js" }
   ]
 }
